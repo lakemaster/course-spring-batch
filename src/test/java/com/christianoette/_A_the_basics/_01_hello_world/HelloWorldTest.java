@@ -3,9 +3,7 @@ package com.christianoette._A_the_basics._01_hello_world;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
-import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -19,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+
 @SpringBootTest(classes = HelloWorldTest.TestConfig.class)
 class HelloWorldTest {
 
@@ -27,7 +27,11 @@ class HelloWorldTest {
 
     @Test
     void test() throws Exception {
-        jobLauncherTestUtils.launchJob();
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addParameter("outputText", new JobParameter("Hello Spring Batch"))
+                .toJobParameters();
+
+        jobLauncherTestUtils.launchJob(jobParameters);
     }
 
     @Configuration
@@ -44,7 +48,8 @@ class HelloWorldTest {
         public Job helloWorldJob() {
             Step step = stepBuilderFactory.get("step")
                     .tasklet((stepContribution, chunkContext) -> {
-                        System.out.println("Hello World");
+                        Map<String, Object> jobParameters = chunkContext.getStepContext().getJobParameters();
+                        System.out.println(jobParameters.get("outputText"));
                         return RepeatStatus.FINISHED;
                     }).build();
 

@@ -34,6 +34,7 @@ public class TriggerJobService {
             e.printStackTrace();
         }
 
+        // cannot run one job with the same parameters twice
         jobParameters = new JobParametersBuilder().addParameter("outputText", new JobParameter("Second run"))
                 .toJobParameters();
 

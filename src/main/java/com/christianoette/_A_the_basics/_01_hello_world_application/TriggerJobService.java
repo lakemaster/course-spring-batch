@@ -27,6 +27,17 @@ public class TriggerJobService {
                 .toJobParameters();
 
         jobLauncher.run(job, jobParameters);
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        jobParameters = new JobParametersBuilder().addParameter("outputText", new JobParameter("Second run"))
+                .toJobParameters();
+
+        jobLauncher.run(job, jobParameters);
     }
 
 }

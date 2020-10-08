@@ -26,6 +26,7 @@ public class Application {
 
 		TriggerJobService triggerJobService = appContext.getBean(TriggerJobService.class);
 		triggerJobService.runJob();
+
 	}
 
 }
